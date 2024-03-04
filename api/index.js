@@ -7,6 +7,8 @@ const app = express()
 
 configDotenv()
 app.use(express.json())
+
+
 //database
 
 mongoose.connect(process.env.MONGO)
@@ -28,3 +30,18 @@ app.listen(3000,()=>{
 
 app.use('/api/user',UserRoutes)
 app.use('/api/auth',AuthRoutes)
+
+
+
+//errors
+
+app.use((err,req,res,next)=>{
+    const statusCode = err.statusCode || 500
+    const message = err.message || "internal server error"
+
+    res.status(500).json({
+        success:false,
+        statusCode,
+        message
+    })
+})
