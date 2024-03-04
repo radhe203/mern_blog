@@ -2,9 +2,11 @@ import express from 'express'
 import {configDotenv} from 'dotenv'
 import mongoose from 'mongoose'
 import UserRoutes from './routes/user.routes.js'
+import AuthRoutes from './routes/auth.routes.js'
 const app = express()
-configDotenv()
 
+configDotenv()
+app.use(express.json())
 //database
 
 mongoose.connect(process.env.MONGO)
@@ -21,6 +23,8 @@ app.listen(3000,()=>{
 })
 
 
+
 //routes
 
 app.use('/api/user',UserRoutes)
+app.use('/api/auth',AuthRoutes)
