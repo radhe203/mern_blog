@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Spinner } from "flowbite-react";
+import {
+  signInFailure,
+  signInSuccess,
+  signInStart,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 function SignIn() {
-  const [Loading, SetLoading] = useState(false);
-  const [errorMessage, SeterrorMessage] = useState(null);
+  const dispatch = useDispatch();
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
 
@@ -13,13 +19,10 @@ function SignIn() {
   async function submitHandel(e) {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      SeterrorMessage("All feilds are required");
-      return;
+      return dispatch(signInFailure("all fiels required"));
     }
 
-    SetLoading(true);
-    SeterrorMessage(null);
-
+    dispatch(signInStart());
     try {
       const res = await fetch("/api/auth/signin", {
         method: "POST",
@@ -31,15 +34,13 @@ function SignIn() {
 
       const data = await res.json();
 
-      if (data.success === true) {
-        SetLoading(false);
-        navigate("/sign-in");
+      if (data.success === false) {
+        return dispatch(signInFailure(data.message));
       }
-      SetLoading(false);
-      SeterrorMessage(data.message);
+      dispatch(signInSuccess(data));
+      navigate('/')
     } catch (error) {
-      SeterrorMessage(error.message);
-      SetLoading(false);
+      dispatch(signInFailure(data.message));
     }
   }
 
@@ -89,9 +90,9 @@ function SignIn() {
           <Button
             gradientDuoTone={"purpleToPink"}
             type="submit"
-            disabled={Loading}
+            disabled={loading}
           >
-            {Loading ? (
+            {loading ? (
               <>
                 <Spinner size={"sm"} />
                 <span className="ml-2">Loading</span>
@@ -102,9 +103,11 @@ function SignIn() {
           </Button>
           <p className=" text-slate-700 mt-1 text-sm">
             Don't Have an account
-            <span className=" text-blue-700 ml-1 cursor-pointer"><Link to={'/sign-up'}>sign up</Link></span>
+            <span className=" text-blue-700 ml-1 cursor-pointer">
+              <Link to={"/sign-up"}>sign up</Link>
+            </span>
           </p>
-          {errorMessage && <Alert color={"failure"}>{errorMessage}</Alert>}
+          {error && <Alert color={"failure"}>{error}</Alert>}
         </form>
       </div>
     </div>
