@@ -3,10 +3,14 @@ import { Button, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaMoon, FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import {toggleTheme} from "../redux/theme/themeSlice"
 
 function Header() {
   const path = useLocation().pathname;
+  const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+
   const [ profile, SetProfile ] = useState(false);
   console.log(currentUser, "currentuser");
   return (
@@ -34,7 +38,9 @@ function Header() {
         <FaSearch />
       </Button>
       <div className="flex gap-2 md:order-2">
-        <Button color="gray" pill className="w-12 h-12 hidden sm:inline">
+        <Button color="gray" pill className="w-12 h-12 hidden sm:inline" onClick={()=>{
+          dispatch(toggleTheme())
+        }}>
           <FaMoon />
         </Button>
 
@@ -47,9 +53,9 @@ function Header() {
             alt=""
             className="w-12 h-12 rounded-full cursor-pointer"
           />
-          <div className={`bg-slate-50 py-4 px-6 absolute top-[110%] right-0 ${!profile && "hidden"}`} >
-            <p className="truncate text-sm py-1 hover:bg-slate-200"> {currentUser.username} </p>
-            <p className="truncate text-sm py-1 hover:bg-slate-200"> {currentUser.email} </p>
+          <div className={` py-4 px-6 absolute top-[110%] right-0 ${!profile && "hidden"} ${theme === "dark" ? "bg-slate-700" : "bg-slate-50" } `} >
+            <p className="truncate text-sm py-1"> {currentUser.username} </p>
+            <p className="truncate text-sm py-1 "> {currentUser.email} </p>
             <div className=" border-t-2 border-gray-500 mt-2 flex justify-between pt-2 font-semibold">
               <span className=" cursor-pointer">Log out</span>
               <span className=" cursor-pointer">Profile</span>
