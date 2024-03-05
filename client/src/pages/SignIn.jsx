@@ -7,6 +7,7 @@ import {
   signInStart,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Outh from "../components/Outh";
 function SignIn() {
   const dispatch = useDispatch();
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -101,6 +102,7 @@ function SignIn() {
               "Sign in"
             )}
           </Button>
+          <Outh/>
           <p className=" text-slate-700 mt-1 text-sm">
             Don't Have an account
             <span className=" text-blue-700 ml-1 cursor-pointer">

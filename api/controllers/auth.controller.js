@@ -38,7 +38,7 @@ export async function sigin(req, res, next) {
 
   try {
     const validUser = await User.findOne({ email });
-    console.log(validUser)
+    console.log(validUser);
     if (!validUser) {
       return next(ErrorHandler(400, "User Not Found"));
     }
@@ -50,11 +50,55 @@ export async function sigin(req, res, next) {
     }
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SEC);
 
-    const {password:pass,...rest} = validUser._doc
+    const { password: pass, ...rest } = validUser._doc;
 
     res.status(200).cookie("blog_token", token, { httpOnly: true }).json(rest);
-
   } catch (error) {
-    next(error)
+    next(error);
+  }
+}
+
+export async function google(req, res, next) {
+  const { name, email, googlePhotoUrl } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SEC);
+
+      const { password: pass, ...rest } = existingUser._doc;
+
+      res
+        .status(200)
+        .cookie("blog_token", token, { httpOnly: true })
+        .json(rest);
+    } else {
+      const genratedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hssedPassword = bcryptjs.hashSync(genratedPassword, 10);
+      const username =
+        name.toLowerCase().split(" ").join("") +
+        Math.random().toString(9).slice(-4);
+
+      const newUser = new User({
+        username,
+        email,
+        password: hssedPassword,
+        profilePicture: googlePhotoUrl,
+      });
+
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SEC);
+
+      const { password: pass, ...rest } = newUser._doc;
+
+      res
+        .status(200)
+        .cookie("blog_token", token, { httpOnly: true })
+        .json(rest);
+    }
+  } catch (error) {
+    next(ErrorHandler(400,error.message))
   }
 }

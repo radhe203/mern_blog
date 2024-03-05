@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Spinner} from "flowbite-react";
 import { signInFailure,signInSuccess,signInStart } from "../redux/user/userSlice";
 import {useDispatch, useSelector} from "react-redux"
+import Outh from "../components/Outh";
 function SignUp() {
   const dispatch = useDispatch()
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -108,6 +109,7 @@ function SignUp() {
               "Sign up"
             )}
           </Button>
+          <Outh/>
           <p className=" text-slate-700 mt-1 text-sm">
             Have an account{" "}
             <span className=" text-blue-700 ml-1 cursor-pointer"><Link to={'/sign-in'}>sign in</Link></span>
