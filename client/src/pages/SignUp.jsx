@@ -11,7 +11,7 @@ function SignUp() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   }
   async function submitHandel(e) {
-    e.preventDefault()
+    e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
       SeterrorMessage("All feilds are required");
       return;
@@ -30,7 +30,6 @@ function SignUp() {
       });
 
       const data = await res.json();
-     
 
       if (data.success === true) {
         SetLoading(false);
@@ -64,7 +63,10 @@ function SignUp() {
           </p>
         </div>
         {/* Right */}
-        <form className="flex-1  mx-auto flex flex-col gap-3 mt-5" onSubmit={submitHandel}>
+        <form
+          className="flex-1  mx-auto flex flex-col gap-3 mt-5"
+          onSubmit={submitHandel}
+        >
           <input
             type="text"
             id="username"
@@ -94,19 +96,25 @@ function SignUp() {
             className=" rounded-lg border-2 border-gray-400 w-[300px] py-3"
             placeholder="password"
           />
-          <Button gradientDuoTone={"purpleToPink"} type="submit" disabled={Loading}>
-          {
-            Loading ? <>
-            <Spinner size={'sm'}/>
-            <span className="ml-2">Loading</span>
-            </>:"Sign up"
-          }
+          <Button
+            gradientDuoTone={"purpleToPink"}
+            type="submit"
+            disabled={Loading}
+          >
+            {Loading ? (
+              <>
+                <Spinner size={"sm"} />
+                <span className="ml-2">Loading</span>
+              </>
+            ) : (
+              "Sign up"
+            )}
           </Button>
           <p className=" text-slate-700 mt-1 text-sm">
             Have an account{" "}
-            <span className=" text-blue-700 ml-1 cursor-pointer">sign in</span>
+            <span className=" text-blue-700 ml-1 cursor-pointer"><Link to={'/sign-in'}>sign in</Link></span>
           </p>
-         {errorMessage &&  <Alert color={"failure"}>{errorMessage}</Alert>}
+          {errorMessage && <Alert color={"failure"}>{errorMessage}</Alert>}
         </form>
       </div>
     </div>
