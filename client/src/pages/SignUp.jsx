@@ -1,10 +1,51 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import {Button, Label, TextInput} from "flowbite-react"
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 function SignUp() {
+  const [Loading, SetLoading] = useState(false);
+  const [errorMessage, SeterrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({});
+
+  function handelChange(e) {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  }
+  async function submitHandel(e) {
+    e.preventDefault()
+    if (!formData.username || !formData.email || !formData.password) {
+      SeterrorMessage("All feilds are required");
+      return;
+    }
+
+    SetLoading(true);
+    SeterrorMessage(null);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "Application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+     
+
+      if (data.success === true) {
+        SetLoading(false);
+        navigate("/sign-in");
+      }
+      SetLoading(false);
+      SeterrorMessage(data.message);
+    } catch (error) {
+      SeterrorMessage(error.message);
+      SetLoading(false);
+    }
+  }
+
   return (
     <div className="mt-20 min-h-screen">
-      
       <div className="flex justify-center items-center  flex-col md:flex-row p-3 mx-auto max-w-3xl gap-5">
         {/* left */}
         <div className="">
@@ -23,19 +64,51 @@ function SignUp() {
           </p>
         </div>
         {/* Right */}
-        <form className="flex-1  mx-auto flex flex-col gap-3 mt-5">
-          <input type="text" required className="rounded-lg border-2 border-gray-400 w-[300px] py-3" placeholder="usernmae"/>
+        <form className="flex-1  mx-auto flex flex-col gap-3 mt-5" onSubmit={submitHandel}>
+          <input
+            type="text"
+            id="username"
+            value={formData.username}
+            onChange={handelChange}
+            required
+            className="rounded-lg border-2 border-gray-400 w-[300px] py-3"
+            placeholder="usernmae"
+          />
 
-          <input type="email" required className="rounded-lg border-2 border-gray-400 w-[300px] py-3" placeholder="email"/>
+          <input
+            type="email"
+            id="email"
+            value={formData.email}
+            onChange={handelChange}
+            required
+            className="rounded-lg border-2 border-gray-400 w-[300px] py-3"
+            placeholder="email"
+          />
 
-          <input type="password" required className=" rounded-lg border-2 border-gray-400 w-[300px] py-3" placeholder="password"/>
-          <Button gradientDuoTone={"purpleToPink"} type="submit">Sign up</Button>
-          <p className=" text-slate-700 mt-1 text-sm">Have an account <span className=" text-blue-700 ml-3">Sign in</span></p>
+          <input
+            type="password"
+            required
+            id="password"
+            value={formData.password}
+            onChange={handelChange}
+            className=" rounded-lg border-2 border-gray-400 w-[300px] py-3"
+            placeholder="password"
+          />
+          <Button gradientDuoTone={"purpleToPink"} type="submit" disabled={Loading}>
+          {
+            Loading ? <>
+            <Spinner size={'sm'}/>
+            <span className="ml-2">Loading</span>
+            </>:"Sign up"
+          }
+          </Button>
+          <p className=" text-slate-700 mt-1 text-sm">
+            Have an account{" "}
+            <span className=" text-blue-700 ml-1 cursor-pointer">sign in</span>
+          </p>
+         {errorMessage &&  <Alert color={"failure"}>{errorMessage}</Alert>}
         </form>
-        
       </div>
-
-      {/* Right */}
     </div>
   );
 }
