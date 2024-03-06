@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
-import { FaMoon, FaSearch } from "react-icons/fa";
+import { FaMoon, FaSearch,FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {toggleTheme} from "../redux/theme/themeSlice"
 
@@ -41,7 +41,9 @@ function Header() {
         <Button color="gray" pill className="w-12 h-12 hidden sm:inline" onClick={()=>{
           dispatch(toggleTheme())
         }}>
-          <FaMoon />
+          {theme==="light"?<FaMoon />: <FaSun />}
+          
+         
         </Button>
 
         {currentUser ? (<div className="profile z-50 relative">
