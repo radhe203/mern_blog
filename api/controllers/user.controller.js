@@ -48,6 +48,8 @@ export const updateUser = async (req, res, next) => {
 };
 
 
+
+
 export async function deleteUser(req,res,next){
   if (req.user.id !== req.params.userId) {
     return next(ErrorHandler(401, "not allowed"));
@@ -56,6 +58,15 @@ export async function deleteUser(req,res,next){
   try {
     await User.findByIdAndDelete(req.params.userId);
     res.status(200).json("user deleted successfully")
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export async function signOut(req,res,next){
+  try {
+    res.clearCookie('blog_token').status(200).json("user has been signed out successfully")
   } catch (error) {
     next(error)
   }

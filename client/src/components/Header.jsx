@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaMoon, FaSearch,FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {toggleTheme} from "../redux/theme/themeSlice"
+import { signOutsucsess } from "../redux/user/userSlice";
 
 function Header() {
   const path = useLocation().pathname;
@@ -12,7 +13,17 @@ function Header() {
   const { theme } = useSelector((state) => state.theme);
 
   const [ profile, SetProfile ] = useState(false);
-  console.log(currentUser, "currentuser");
+  async function signOutHandel(){
+    const res = await fetch('/api/user/signout',{
+      method:"POST"
+    })
+    const data = res.json();
+    if(!res.ok){
+      console.log(data)
+    }
+
+    dispatch(signOutsucsess())
+  }
   return (
     <Navbar className=" border-b-2">
       <Link
@@ -59,7 +70,7 @@ function Header() {
             <p className="truncate text-sm py-1"> {currentUser.username} </p>
             <p className="truncate text-sm py-1 "> {currentUser.email} </p>
             <div className=" border-t-2 border-gray-500 mt-2 flex justify-between pt-2 font-semibold">
-              <span className=" cursor-pointer">Log out</span>
+              <span className=" cursor-pointer" onClick={()=>signOutHandel()}>Log out</span>
               <span className=" cursor-pointer"><Link to={`/dashboard?tab=profile`}>Profile</Link></span>
             </div>
           </div>

@@ -18,6 +18,7 @@ import {
   deleteStart,
   deleteSuccess,
   deleteFailure,
+  signOutsucsess,
 } from "../redux/user/userSlice";
 
 function DashProfile() {
@@ -126,6 +127,17 @@ function DashProfile() {
     }
   }
 
+  async function signOutHandel(){
+    const res = await fetch('/api/user/signout',{
+      method:"POST"
+    })
+    const data = res.json();
+    if(!res.ok){
+      console.log(data)
+    }
+
+    dispatch(signOutsucsess())
+  }
   return (
     <>
       <form
@@ -215,7 +227,7 @@ function DashProfile() {
         </Button>
         <div className=" text-sm text-red-700 flex justify-between w-full">
           <span onClick={() => setShowModal(true)} className=" cursor-pointer">Delete Account</span>
-          <span className=" cursor-pointer">Sign out</span>
+          <span className=" cursor-pointer" onClick={()=>signOutHandel()}>Sign out</span>
         </div>
 
         {error && (

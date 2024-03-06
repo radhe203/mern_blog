@@ -9,9 +9,11 @@ import {
   HiChartPie,
 } from "react-icons/hi";
 import { useEffect, useState } from "react";
+import { signOutsucsess } from "../redux/user/userSlice";
+import {useDispatch} from "react-redux"
 function DashSidebar() {
+  const dispatch=useDispatch()
   const [tab, setTab] = useState();
-  console.log(tab);
   const location = useLocation();
   useEffect(() => {
     const urlPrams = new URLSearchParams(location.search);
@@ -20,6 +22,18 @@ function DashSidebar() {
       setTab(tabFormUrl);
     }
   }, [location.search]);
+
+  async function signOutHandel(){
+    const res = await fetch('/api/user/signout',{
+      method:"POST"
+    })
+    const data = res.json();
+    if(!res.ok){
+      console.log(data)
+    }
+
+    dispatch(signOutsucsess())
+  }
   return (
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
@@ -35,7 +49,7 @@ function DashSidebar() {
               Profile
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" as="div">
+          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" as="div" onClick={()=>signOutHandel()} >
             Sign out
           </Sidebar.Item>
         </Sidebar.ItemGroup>
