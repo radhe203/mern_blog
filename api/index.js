@@ -3,10 +3,13 @@ import {configDotenv} from 'dotenv'
 import mongoose from 'mongoose'
 import UserRoutes from './routes/user.routes.js'
 import AuthRoutes from './routes/auth.routes.js'
+import cookieParser from "cookie-parser";
+
 const app = express()
 
 configDotenv()
 app.use(express.json())
+app.use(cookieParser())
 
 
 //database
