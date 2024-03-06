@@ -60,7 +60,7 @@ function Header() {
             <p className="truncate text-sm py-1 "> {currentUser.email} </p>
             <div className=" border-t-2 border-gray-500 mt-2 flex justify-between pt-2 font-semibold">
               <span className=" cursor-pointer">Log out</span>
-              <span className=" cursor-pointer">Profile</span>
+              <span className=" cursor-pointer"><Link to={`/dashboard?tab=profile`}>Profile</Link></span>
             </div>
           </div>
         </div>):(
