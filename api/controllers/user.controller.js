@@ -19,11 +19,11 @@ export const updateUser = async (req, res, next) => {
 
   if (req.body.username) {
     if (req.body.username.length < 7 || req.body.username.length > 20) {
-      return next(401, "username length must be between 7 to 20 ");
+      return next(ErrorHandler(401, "username length must be between 7 to 20 "));
     } else if (req.body.username.includes(" ")) {
-      return next(401, "username can not contain spaces ");
+      return next(ErrorHandler(401, "username can not contain spaces "));
     } else if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
-      return next(401, "username can only contain numbers and letters ");
+      return next(ErrorHandler(401, "username can only contain numbers and letters "));
     }
   }
 

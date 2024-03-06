@@ -48,7 +48,7 @@ export async function sigin(req, res, next) {
     if (!validpassword) {
       return next(ErrorHandler(400, "Wrong Credentials"));
     }
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SEC);
+    const token = jwt.sign({ id: validUser._id,isAdmin:validUser.isAdmin }, process.env.JWT_SEC);
 
     const { password: pass, ...rest } = validUser._doc;
 
@@ -64,7 +64,7 @@ export async function google(req, res, next) {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SEC);
+      const token = jwt.sign({ id: existingUser._id, isAdmin:existingUser.isAdmin}, process.env.JWT_SEC);
 
       const { password: pass, ...rest } = existingUser._doc;
 
@@ -89,7 +89,7 @@ export async function google(req, res, next) {
       });
 
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SEC);
+      const token = jwt.sign({ id: newUser._id,isAdmin:newUser.isAdmin }, process.env.JWT_SEC);
 
       const { password: pass, ...rest } = newUser._doc;
 

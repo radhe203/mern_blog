@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, } from "react-redux";
 import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { app } from "../firbase.js";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import {Link}from "react-router-dom"
 import {
   getDownloadURL,
   getStorage,
@@ -127,16 +128,16 @@ function DashProfile() {
     }
   }
 
-  async function signOutHandel(){
-    const res = await fetch('/api/user/signout',{
-      method:"POST"
-    })
+  async function signOutHandel() {
+    const res = await fetch("/api/user/signout", {
+      method: "POST",
+    });
     const data = res.json();
-    if(!res.ok){
-      console.log(data)
+    if (!res.ok) {
+      console.log(data);
     }
 
-    dispatch(signOutsucsess())
+    dispatch(signOutsucsess());
   }
   return (
     <>
@@ -225,9 +226,26 @@ function DashProfile() {
             "update"
           )}
         </Button>
+
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"} className="w-full">
+            <Button
+              type="button"
+              gradientDuoTone={"purpleToPink"}
+              className="w-full"
+            >
+              Create a Post
+            </Button>
+          </Link>
+        )}
+
         <div className=" text-sm text-red-700 flex justify-between w-full">
-          <span onClick={() => setShowModal(true)} className=" cursor-pointer">Delete Account</span>
-          <span className=" cursor-pointer" onClick={()=>signOutHandel()}>Sign out</span>
+          <span onClick={() => setShowModal(true)} className=" cursor-pointer">
+            Delete Account
+          </span>
+          <span className=" cursor-pointer" onClick={() => signOutHandel()}>
+            Sign out
+          </span>
         </div>
 
         {error && (
@@ -258,7 +276,11 @@ function DashProfile() {
               <Button color="failure" type="button" onClick={handleDeleteUser}>
                 Yes, I'm sure
               </Button>
-              <Button color="gray"  type="button" onClick={() => setShowModal(false)}>
+              <Button
+                color="gray"
+                type="button"
+                onClick={() => setShowModal(false)}
+              >
                 No, cancel
               </Button>
             </div>
