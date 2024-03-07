@@ -38,7 +38,6 @@ export async function sigin(req, res, next) {
 
   try {
     const validUser = await User.findOne({ email });
-    console.log(validUser);
     if (!validUser) {
       return next(ErrorHandler(400, "User Not Found"));
     }

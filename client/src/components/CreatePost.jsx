@@ -78,7 +78,6 @@ function CreatePost() {
         body: JSON.stringify(FormData),
       });
       const data = await res.json();
-      console.log(data,"data");
       if (!res.ok) {
         setError(data.message);
         setuploading(false);
