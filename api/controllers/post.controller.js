@@ -65,7 +65,6 @@ export async function getPosts(req, res, next) {
       createdAt: { $gte: oneMonthAgo },
     });
 
-
     res.status(200).json({
       posts,
       totalPosts,
@@ -76,15 +75,34 @@ export async function getPosts(req, res, next) {
   }
 }
 export async function deletePost(req, res, next) {
-  console.log("delete start")
+  console.log("delete start");
   if (!req.user.isAdmin || req.params.userId !== req.user.id) {
     return next(ErrorHandler(401, "you are not allowed to do it"));
   }
 
   try {
-    await Post.findByIdAndDelete(req.params.postId)
-    res.status(200).json("the post has been deleted")
+    await Post.findByIdAndDelete(req.params.postId);
+    res.status(200).json("the post has been deleted");
   } catch (error) {
-    next(error)
+    next(error);
+  }
+}
+
+export async function updatePost(req, res, next) {
+  if (!req.user.isAdmin || req.params.userId !== req.user.id) {
+    return next(ErrorHandler(401, "you are not allowed to do it"));
+  }
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
   }
 }

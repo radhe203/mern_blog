@@ -11,6 +11,7 @@ import FooterComp from "./components/FooterComp";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePost from "./components/CreatePost";
+import EditPost from "./components/EditPost";
 function App() {
   return (
     <BrowserRouter>
@@ -24,10 +25,9 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
-
         <Route element={<AdminPrivateRoute />}>
-        <Route path="/create-post" element={<CreatePost />} />
-
+          <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/update-post/:postId" element={<EditPost />} />
         </Route>
       </Routes>
       <FooterComp />
