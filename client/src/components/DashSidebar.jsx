@@ -10,8 +10,9 @@ import {
 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { signOutsucsess } from "../redux/user/userSlice";
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 function DashSidebar() {
+  const { currentUser} = useSelector((state) => state.user);
   const dispatch=useDispatch()
   const [tab, setTab] = useState();
   const location = useLocation();
@@ -42,13 +43,25 @@ function DashSidebar() {
             <Sidebar.Item
               active={tab === "profile"}
               icon={HiUser}
-              label={"User"}
+              label={`${currentUser.isAdmin ? "Admin": "User"}`}
               labelColor="dark"
               as="div"
             >
               Profile
             </Sidebar.Item>
           </Link>
+
+          <Link to="/dashboard?tab=posts">
+            <Sidebar.Item
+              active={tab === "posts"}
+              icon={HiUser}
+              labelColor="dark"
+              as="div"
+            >
+              Posts
+            </Sidebar.Item>
+          </Link>
+
           <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" as="div" onClick={()=>signOutHandel()} >
             Sign out
           </Sidebar.Item>
