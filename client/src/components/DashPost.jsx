@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Button, Table } from "flowbite-react";
+import { Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+
 function DashPost() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
-  const [showMore,setShowmore] = useState(true)
+  const [showMore, setShowmore] = useState(true);
+  const [deleteId, setDeleteId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -27,22 +31,42 @@ function DashPost() {
     }
   }, []);
 
-  async function showMoreHandel(){
-    const startIndex= userPosts.length
+  async function showMoreHandel() {
+    const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      const res = await fetch(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
-        setUserPosts((prev)=>[...prev,...data.posts]);
+        setUserPosts((prev) => [...prev, ...data.posts]);
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-
-
-
+  async function deleteHandel() {
+    setShowModal(false);
+    console.log("hi dkvfev")
+    try {
+      const res = await fetch(
+        `/api/post/delete/${currentUser._id}/${deleteId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (res.ok) {
+        setUserPosts((prev) => prev.filter((item) => item._id !== deleteId));
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="table-auto overflow-x-scroll overflow-y-scroll md:mx-auto scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500 w-full h-[100vh]">
@@ -60,7 +84,7 @@ function DashPost() {
               </Table.HeadCell>
             </Table.Head>
 
-            {userPosts.map((post,index) => {
+            {userPosts.map((post, index) => {
               return (
                 <Table.Body className="divide-y" key={index}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -89,7 +113,7 @@ function DashPost() {
                       <span
                         onClick={() => {
                           setShowModal(true);
-                          setPostIdToDelete(post._id);
+                          setDeleteId(post._id);
                         }}
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                       >
@@ -109,6 +133,42 @@ function DashPost() {
               );
             })}
           </Table>
+
+          {showModal && (
+            <Modal
+              show={showModal}
+              onClose={() => setShowModal(false)}
+              popup
+              size={"md"}
+            >
+              <Modal.Header />
+              <Modal.Body>
+                <div className="text-center">
+                  <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+                  <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+                    Are you sure you want to delete this post?
+                  </h3>
+                  <div className="flex justify-center gap-4">
+                    <Button
+                      color="failure"
+                      type="button"
+                      onClick={deleteHandel}
+                    >
+                      Yes, I'm sure
+                    </Button>
+                    <Button
+                      color="gray"
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                    >
+                      No, cancel
+                    </Button>
+                  </div>
+                </div>
+              </Modal.Body>
+            </Modal>
+          )}
+
           {showMore && (
             <button
               type="button"

@@ -19,7 +19,7 @@ function Header() {
     })
     const data = res.json();
     if(!res.ok){
-      console.log(data)
+      console.log(data.message)
     }
 
     dispatch(signOutsucsess())
