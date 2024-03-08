@@ -93,11 +93,23 @@ export async function updatePost(req, res, next) {
     return next(ErrorHandler(401, "you are not allowed to do it"));
   }
 
+  const newSlug = req.body.tittle
+    .split(" ")
+    .join("-")
+    .toLowerCase()
+    .replace(/^[a-zA-Z0-9]+$/, "-");
+
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
       {
-        $set: req.body,
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+          slug: newSlug,
+        },
       },
       { new: true }
     );
