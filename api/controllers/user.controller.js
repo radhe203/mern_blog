@@ -129,3 +129,17 @@ export async function deleteUserByadmin(req,res,next){
     next(error)
   }
 }
+
+export async function getUser(req, res, next){
+  console.log("get user by id started")
+  try {
+    const user = await User.findById(req.params.userId);
+    if(!user){
+      return next(ErrorHandler(404, "user not found"))
+    }
+    const {password, ...rest} = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error)
+  }
+}

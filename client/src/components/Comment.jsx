@@ -1,13 +1,15 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import AllComment from "./AllComment";
 
 function Comment({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [Comment, setComment] = useState(null);
   const [commentError, setCommentError] = useState(null);
   const [commentSuccess, setCommentSuccess] = useState(null);
+  const [allComment, setallComment] = useState([]);
   const handleComment = (e) => {
     setComment(e.target.value);
   };
@@ -40,54 +42,86 @@ function Comment({ postId }) {
     }
   }
 
+  useEffect(() => {
+    async function fetchComments() {
+      const res = await fetch(`/api/comment/getpostcomments/${postId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setallComment(data);
+      }
+      console.log(data);
+    }
+    fetchComments();
+  }, [postId]);
+
+  console.log(allComment, "allcoment");
   return (
-    <div className="max-w-2xl mx-auto w-full p-3">
-      {currentUser ? (
-        <div className="flex items-center text-gray-500 w-full mx-auto">
-          <p>signed in as</p>
-          <img
-            src={currentUser.profilePicture}
-            alt=""
-            className="w-5 h-5 rounded-full ml-2"
-          />
-          <Link to={`/dashboard?tab=profile`} className="text-blue-500">
-            @{currentUser.username}
-          </Link>
-        </div>
-      ) : (
-        <div className="flex items-center text-gray-500 mx-auto">
-          <p>you must sign in to comment</p>
-          <Link to={"/sign-in"} className="text-sm text-blue-600 ml-2">
-            Sign in
-          </Link>
-        </div>
-      )}
-      {currentUser && (
-        <form
-          className="border border-teal-500 rounded-md p-4 mt-1"
-          onSubmit={handleSubmit}
-        >
-          <Textarea
-            placeholder="write a comment"
-            required={true}
-            rows={4}
-            name="comment"
-            onChange={handleComment}
-            value={Comment}
-            maxLength={200}
-          />
-          <div className="flex justify-between items-center mt-1 mb-3">
-            <p className="text-gray-500">
-              {Comment ? 200 - Comment.length : 200} characters left
-            </p>
-            <Button type="submit" outline gradientDuoTone={"purpleToPink"}>
-              submit
-            </Button>
+    <>
+      <div className="max-w-2xl mx-auto w-full p-3">
+        {currentUser ? (
+          <div className="flex items-center text-gray-500 w-full mx-auto">
+            <p>signed in as</p>
+            <img
+              src={currentUser.profilePicture}
+              alt=""
+              className="w-5 h-5 rounded-full ml-2"
+            />
+            <Link to={`/dashboard?tab=profile`} className="text-blue-500">
+              @{currentUser.username}
+            </Link>
           </div>
-          {commentError && <Alert>{commentError}</Alert>}
-        </form>
-      )}
-    </div>
+        ) : (
+          <div className="flex items-center text-gray-500 mx-auto">
+            <p>you must sign in to comment</p>
+            <Link to={"/sign-in"} className="text-sm text-blue-600 ml-2">
+              Sign in
+            </Link>
+          </div>
+        )}
+        {currentUser && (
+          <form
+            className="border border-teal-500 rounded-md p-4 mt-1"
+            onSubmit={handleSubmit}
+          >
+            <Textarea
+              placeholder="write a comment"
+              required={true}
+              rows={4}
+              name="comment"
+              onChange={handleComment}
+              value={Comment}
+              maxLength={200}
+            />
+            <div className="flex justify-between items-center mt-1 mb-3">
+              <p className="text-gray-500">
+                {Comment ? 200 - Comment.length : 200} characters left
+              </p>
+              <Button type="submit" outline gradientDuoTone={"purpleToPink"}>
+                submit
+              </Button>
+            </div>
+            {commentError && <Alert>{commentError}</Alert>}
+          </form>
+        )}
+
+        {allComment.length === 0 ? (
+          <p className="text-sm my-5">no comments yet</p>
+        ) : (
+          <>
+            <div className="flex my-5 items-center">
+              <p>Comments</p>
+
+              <p className="border border-gray-400 px-2 rounded-sm ml-3">
+                {allComment.length}
+              </p>
+            </div>
+            {allComment.length > 0 && allComment.map((com)=>{
+              return <AllComment key={com._id} comment={com}/>
+            }) }
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

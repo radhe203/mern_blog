@@ -18,3 +18,15 @@ export async function createComment(req, res, next) {
     next(error);
   }
 }
+
+export async function getComments(req, res, next) {
+    console.log("all com")
+  try {
+    const comments = await Comment.find({ postId: req.params.postId }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json(comments);
+  } catch (error) {
+    next(error);
+  }
+}
