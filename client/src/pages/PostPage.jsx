@@ -2,7 +2,7 @@ import { Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-
+import Comment from "../components/Comment";
 function PostPage() {
   const { slug } = useParams();
   const [post, setPost] = useState({});
@@ -62,10 +62,10 @@ function PostPage() {
           <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
 
-
         <div dangerouslySetInnerHTML={{__html:post.content}} className="p-3 max-w-2xl mx-auto post-content">
-
         </div>
+
+        <Comment postId={post._id}/>
       </main>
     </>
   );

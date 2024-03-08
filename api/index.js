@@ -5,6 +5,7 @@ import UserRoutes from './routes/user.routes.js'
 import AuthRoutes from './routes/auth.routes.js'
 import cookieParser from "cookie-parser";
 import postRoutes from "./routes/post.routes.js"
+import commentRoutes from "./routes/comment.routes.js"
 const app = express()
 
 configDotenv()
@@ -34,6 +35,7 @@ app.listen(3000,()=>{
 app.use('/api/user',UserRoutes)
 app.use('/api/auth',AuthRoutes)
 app.use('/api/post',postRoutes)
+app.use('/api/comment', commentRoutes)
 
 
 //errors
