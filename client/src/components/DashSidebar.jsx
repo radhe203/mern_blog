@@ -62,6 +62,17 @@ function DashSidebar() {
             </Sidebar.Item>
           </Link>
 
+          <Link to="/dashboard?tab=users">
+            <Sidebar.Item
+              active={tab === "users"}
+              icon={HiOutlineUserGroup}
+              labelColor="dark"
+              as="div"
+            >
+              Users
+            </Sidebar.Item>
+          </Link>
+
           <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" as="div" onClick={()=>signOutHandel()} >
             Sign out
           </Sidebar.Item>

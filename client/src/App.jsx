@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePost from "./components/CreatePost";
 import EditPost from "./components/EditPost";
+import Users from "./components/Users";
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +29,7 @@ function App() {
         <Route element={<AdminPrivateRoute />}>
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:postId" element={<EditPost />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Routes>
       <FooterComp />
