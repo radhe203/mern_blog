@@ -13,6 +13,7 @@ import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePost from "./components/CreatePost";
 import EditPost from "./components/EditPost";
 import Users from "./components/Users";
+import PostPage from "./pages/PostPage";
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +32,7 @@ function App() {
           <Route path="/update-post/:postId" element={<EditPost />} />
           <Route path="/users" element={<Users />} />
         </Route>
+        <Route path="/post/:slug" element={<PostPage />} />
       </Routes>
       <FooterComp />
     </BrowserRouter>
