@@ -1,7 +1,7 @@
 import { Alert, Button, Textarea } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AllComment from "./AllComment";
 
 function Comment({ postId }) {
@@ -10,9 +10,18 @@ function Comment({ postId }) {
   const [commentError, setCommentError] = useState(null);
   const [commentSuccess, setCommentSuccess] = useState(null);
   const [allComment, setallComment] = useState([]);
+  const navigate= useNavigate()
   const handleComment = (e) => {
     setComment(e.target.value);
   };
+  async function fetchComments() {
+    const res = await fetch(`/api/comment/getpostcomments/${postId}`);
+    const data = await res.json();
+    if (res.ok) {
+      setallComment(data);
+    }
+    console.log(data);
+  }
 
   async function handleSubmit(e) {
     setCommentError(null);
@@ -36,6 +45,8 @@ function Comment({ postId }) {
         setComment("");
         setCommentSuccess(true);
         setCommentError(null);
+        fetchComments()
+        
       }
     } catch (error) {
       setCommentError(error.message);
@@ -43,18 +54,34 @@ function Comment({ postId }) {
   }
 
   useEffect(() => {
-    async function fetchComments() {
-      const res = await fetch(`/api/comment/getpostcomments/${postId}`);
-      const data = await res.json();
-      if (res.ok) {
-        setallComment(data);
-      }
-      console.log(data);
-    }
     fetchComments();
   }, [postId]);
 
-  console.log(allComment, "allcoment");
+
+  async function handleLike(commentId){
+    try {
+      if(!currentUser){
+        return navigate('/sign-in')
+      }
+      const res = await fetch(`/api/comment/likecomment/${commentId}`,{
+        method:'PUT',
+      })
+      const data = await res.json()
+      if(res.ok){
+        setallComment(allComment.map(comment=>{
+          if(comment._id === commentId){
+            return {...comment,likes:data.likes,numberOfLikes:data.likes.length}
+          }
+          return comment
+        }
+        ))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   return (
     <>
       <div className="max-w-2xl mx-auto w-full p-3">
@@ -116,7 +143,7 @@ function Comment({ postId }) {
               </p>
             </div>
             {allComment.length > 0 && allComment.map((com)=>{
-              return <AllComment key={com._id} comment={com}/>
+              return <AllComment key={com._id} comment={com} onLike={handleLike}/>
             }) }
           </>
         )}
