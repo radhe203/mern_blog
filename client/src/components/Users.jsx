@@ -16,8 +16,8 @@ function Users() {
       const res = await fetch(`/api/user/getusers`);
       const data = await res.json();
       if (res.ok) {
-        setallusers(data);
-        if (data.length < 9) {
+        setallusers(data.users);
+        if (data.users.length < 9) {
           setShowmore(false);
         }
       }
@@ -57,7 +57,7 @@ function Users() {
       const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
-        setallusers((prev) => [...prev, ...data]);
+        setallusers((prev) => [...prev, ...data.users]);
       }
     } catch (error) {
       console.log(error);

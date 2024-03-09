@@ -88,7 +88,6 @@ export async function getUsers(req, res, next) {
       .sort({ createdAt: sortDicrction })
       .skip(startIndex)
       .limit(limit);
-    res.status(200).json(users);
 
     const rmovePassword = users.map((user) => {
       const { password, ...rest } = user._doc;
@@ -104,11 +103,14 @@ export async function getUsers(req, res, next) {
       now.getDate()
     );
     const lastmonths = await User.find({ createdAt: { $gte: oneMonthAgo } });
-
+    const lastMonthWithoutPassword = lastmonths.map((user) => {
+      const { password, ...rest } = user._doc;
+      return rest;
+    });
     res.status(200).json({
       users: rmovePassword,
       totalUsers,
-      lastmonths,
+      lastmonthusers:lastMonthWithoutPassword
     });
   } catch (error) {
     next(error);
