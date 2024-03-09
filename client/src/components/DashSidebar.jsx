@@ -73,9 +73,21 @@ function DashSidebar() {
             </Sidebar.Item>
           </Link>
 
+          <Link to="/dashboard?tab=comments">
+            <Sidebar.Item
+              active={tab === "comments"}
+              icon={HiDocumentText}
+              labelColor="dark"
+              as="div"
+            >
+             Comments
+            </Sidebar.Item>
+          </Link>
+
           <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" as="div" onClick={()=>signOutHandel()} >
             Sign out
           </Sidebar.Item>
+
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>

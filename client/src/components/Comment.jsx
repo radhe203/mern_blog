@@ -95,7 +95,7 @@ function Comment({ postId }) {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto w-full p-3">
+      <div className="max-w-2xl mx-auto w-full p-3 max-h-[80vh] overflow-y-scroll">
         {currentUser ? (
           <div className="flex items-center text-gray-500 w-full mx-auto">
             <p>signed in as</p>

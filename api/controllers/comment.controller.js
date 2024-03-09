@@ -89,3 +89,37 @@ export async function deleteComment(req, res, next) {
     next(error);
   }
 }
+
+export async function getallComment(req, res, next) {
+  if (!req.user.isAdmin)
+    return next(ErrorHandler(401, "not allowed to get all comments"));
+
+  try {
+    const StartIndex = req.query.StartIndex || 0;
+    const limit = req.query.limit || 9;
+    const sortDirection = req.query.sort === "desc" ? 1 : -1;
+    const comments = await Comment.find()
+      .sort({ createdAt: sortDirection })
+      .skip(StartIndex)
+      .limit(limit);
+    const totalComments = await Comment.countDocuments();
+
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthcomments = await Comment.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    res.status(200).json({
+      comments,
+      totalComments,
+      lastMonthcomments,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
