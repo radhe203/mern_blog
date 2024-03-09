@@ -6,7 +6,6 @@ import { ImCross } from "react-icons/im";
 import { FaCheck } from "react-icons/fa";
 function Users() {
   const [allUsers, setallusers] = useState([]);
-  console.log(allUsers);
   const { currentUser } = useSelector((state) => state.user);
   const [showMore, setShowmore] = useState(true);
   const [deleteId, setDeleteId] = useState(null);

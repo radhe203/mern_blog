@@ -48,7 +48,6 @@ function DashPost() {
 
   async function deleteHandel() {
     setShowModal(false);
-    console.log("hi dkvfev")
     try {
       const res = await fetch(
         `/api/post/delete/${currentUser._id}/${deleteId}`,
@@ -57,7 +56,6 @@ function DashPost() {
         }
       );
       const data = await res.json();
-      console.log(data);
       if (res.ok) {
         setUserPosts((prev) => prev.filter((item) => item._id !== deleteId));
       } else {

@@ -28,8 +28,6 @@ function EditPost() {
   const [imageUploading, SetimageUploading] = useState(false);
   const [FormData, setFormData] = useState({});
   const [qcontent, setqContent] = useState("");
-  console.log(qcontent);
-  console.log(FormData);
   const navigate = useNavigate();
   const { postId } = useParams();
   async function handelChange(e) {

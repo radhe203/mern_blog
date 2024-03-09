@@ -75,7 +75,6 @@ export async function getPosts(req, res, next) {
   }
 }
 export async function deletePost(req, res, next) {
-  console.log("delete start");
   if (!req.user.isAdmin || req.params.userId !== req.user.id) {
     return next(ErrorHandler(401, "you are not allowed to do it"));
   }

@@ -117,7 +117,6 @@ export async function getUsers(req, res, next) {
 
 
 export async function deleteUserByadmin(req,res,next){
-  console.log("delete by admin started")
   if(!req.user.isAdmin){
     return next(ErrorHandler(401, "not allowed to delete user"));
   }
@@ -131,7 +130,6 @@ export async function deleteUserByadmin(req,res,next){
 }
 
 export async function getUser(req, res, next){
-  console.log("get user by id started")
   try {
     const user = await User.findById(req.params.userId);
     if(!user){

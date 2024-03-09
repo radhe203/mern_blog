@@ -20,7 +20,6 @@ function Comment({ postId }) {
     if (res.ok) {
       setallComment(data);
     }
-    console.log(data);
   }
 
   async function handleSubmit(e) {
@@ -57,6 +56,7 @@ function Comment({ postId }) {
     fetchComments();
   }, [postId]);
 
+  
 
   async function handleLike(commentId){
     try {
@@ -77,10 +77,21 @@ function Comment({ postId }) {
         ))
       }
     } catch (error) {
+    }
+  }
+ async function deleteComment(commentId){
+    try{
+      const res = await fetch(`/api/comment/deletecomment/${commentId}`,{
+        method:'DELETE'
+      })
+      const data = await res.json()
+      if(res.ok){
+        setallComment(allComment.filter(comment=>comment._id !== commentId))
+      }
+    }catch(error){
       console.log(error)
     }
   }
-
 
   return (
     <>
@@ -143,7 +154,7 @@ function Comment({ postId }) {
               </p>
             </div>
             {allComment.length > 0 && allComment.map((com)=>{
-              return <AllComment key={com._id} comment={com} onLike={handleLike}/>
+              return <AllComment key={com._id} comment={com} onLike={handleLike} deleteComment={deleteComment}/>
             }) }
           </>
         )}

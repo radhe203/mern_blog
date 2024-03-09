@@ -6,7 +6,6 @@ import Comment from "../components/Comment";
 function PostPage() {
   const { slug } = useParams();
   const [post, setPost] = useState({});
-  console.log(post);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -24,7 +23,6 @@ function PostPage() {
           setLoading(false);
         }
       } catch (error) {
-        console.log(error);
         setLoading(false);
         setError(error.message);
       }

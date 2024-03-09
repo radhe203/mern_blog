@@ -20,7 +20,6 @@ export async function createComment(req, res, next) {
 }
 
 export async function getComments(req, res, next) {
-  console.log("all com");
   try {
     const comments = await Comment.find({ postId: req.params.postId }).sort({
       createdAt: -1,
@@ -54,7 +53,6 @@ export async function likeComment(req, res, next) {
 }
 
 export async function editComment(req, res, next) {
-  console.log(req.body)
   try {
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
@@ -70,8 +68,23 @@ export async function editComment(req, res, next) {
       },
       { new: true }
     );
-    console.log(editComment);
     res.status(200).json(editComment);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteComment(req, res, next) {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) {
+      return next(ErrorHandler(404, "comment not found"));
+    }
+    if (req.user.id !== comment.userId && !req.user.isAdmin) {
+      return next(ErrorHandler(401, "not allowed to delete a comment"));
+    }
+    await Comment.findByIdAndDelete(req.params.commentId);
+    res.status(200).json("comment has been deleted successfully");
   } catch (error) {
     next(error);
   }
