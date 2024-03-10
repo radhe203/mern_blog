@@ -133,7 +133,7 @@ function Header() {
         </Navbar.Link>
 
         <Navbar.Link as={"div"} active={path === "/projects"}>
-          <Link to={`/projects`}>Projects</Link>
+          <Link to={`/contact`}>Contact</Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

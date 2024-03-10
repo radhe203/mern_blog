@@ -5,7 +5,6 @@ import About from "./pages/About";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
 import Header from "./components/Header";
 import FooterComp from "./components/FooterComp";
 import PrivateRoute from "./components/PrivateRoute";
@@ -16,6 +15,7 @@ import Users from "./components/Users";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Search from "./pages/Search";
+import Contact from "./pages/Contact";
 function App() {
   return (
     <BrowserRouter>
@@ -28,7 +28,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/Sign-up" element={<SignUp />} />
-        <Route path="/projects" element={<Projects />} />
+        <Route path="/contact" element={<Contact />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
