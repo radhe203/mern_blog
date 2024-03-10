@@ -1,28 +1,47 @@
+import { useEffect } from "react";
 import React, { useState } from "react";
 import { Button, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
-import { FaMoon, FaSearch,FaSun } from "react-icons/fa";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { FaMoon, FaSearch, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import {toggleTheme} from "../redux/theme/themeSlice"
+import { toggleTheme } from "../redux/theme/themeSlice";
 import { signOutsucsess } from "../redux/user/userSlice";
 
 function Header() {
   const path = useLocation().pathname;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [profile, SetProfile] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const Urlparams = new URLSearchParams(location.search);
+    const search = Urlparams.get("searchTerm");
+    if (search) {
+      setSearchTerm(search);
+    }
+  }, [location.search]);
 
-  const [ profile, SetProfile ] = useState(false);
-  async function signOutHandel(){
-    const res = await fetch('/api/user/signout',{
-      method:"POST"
-    })
+  async function signOutHandel() {
+    const res = await fetch("/api/user/signout", {
+      method: "POST",
+    });
     const data = res.json();
-    if(!res.ok){
-      console.log(data.message)
+    if (!res.ok) {
+      console.log(data.message);
     }
 
-    dispatch(signOutsucsess())
+    dispatch(signOutsucsess());
+  }
+
+  function submitHandel(e) {
+    e.preventDefault();
+    const Urlparams = new URLSearchParams(location.search);
+    Urlparams.set("searchTerm", searchTerm);
+    const search = Urlparams.toString();
+    navigate(`/search?${search}`);
   }
   return (
     <Navbar className=" border-b-2">
@@ -36,50 +55,72 @@ function Header() {
         Blog
       </Link>
 
-      <form action="">
+      <form onSubmit={submitHandel}>
         <TextInput
           placeholder="search..."
           type="text"
           rightIcon={FaSearch}
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
           className="hidden lg:inline"
         ></TextInput>
-      </form>
 
-      <Button className="w-12 h-12 lg:hidden" color="gray" pill>
-        <FaSearch />
-      </Button>
+        <Button type="submit" className="w-12 h-12 lg:hidden" color="gray" pill>
+          <FaSearch />
+        </Button>
+      </form>
       <div className="flex gap-2 md:order-2">
-        <Button color="gray" pill className="w-12 h-12 hidden sm:inline" onClick={()=>{
-          dispatch(toggleTheme())
-        }}>
-          {theme==="light"?<FaMoon />: <FaSun />}
-          
-         
+        <Button
+          color="gray"
+          pill
+          className="w-12 h-12 hidden sm:inline"
+          onClick={() => {
+            dispatch(toggleTheme());
+          }}
+        >
+          {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
 
-        {currentUser ? (<div className="profile z-50 relative">
-          <img
-            src={currentUser.profilePicture}
-            onClick={() => {
-              SetProfile(!profile);
-            }}
-            alt=""
-            className="w-12 h-12 rounded-full cursor-pointer"
-          />
-          <div className={` py-4 px-6 absolute top-[110%] right-0 ${!profile && "hidden"} ${theme === "dark" ? "bg-slate-700" : "bg-slate-50" } `} >
-            <p className="truncate text-sm py-1"> {currentUser.username} </p>
-            <p className="truncate text-sm py-1 "> {currentUser.email} </p>
-            <div className=" border-t-2 border-gray-500 mt-2 flex justify-between pt-2 font-semibold">
-              <span className=" cursor-pointer" onClick={()=>signOutHandel()}>Log out</span>
-              <span className=" cursor-pointer"><Link to={`/dashboard?tab=profile`}>Profile</Link></span>
+        {currentUser ? (
+          <div className="profile z-50 relative">
+            <img
+              src={currentUser.profilePicture}
+              onClick={() => {
+                SetProfile(!profile);
+              }}
+              alt=""
+              className="w-12 h-12 rounded-full cursor-pointer"
+            />
+            <div
+              className={` py-4 px-6 absolute top-[110%] right-0 ${
+                !profile && "hidden"
+              } ${theme === "dark" ? "bg-slate-700" : "bg-slate-50"} `}
+            >
+              <p className="truncate text-sm py-1"> {currentUser.username} </p>
+              <p className="truncate text-sm py-1 "> {currentUser.email} </p>
+              <div className=" border-t-2 border-gray-500 mt-2 flex justify-between pt-2 font-semibold">
+                <span
+                  className=" cursor-pointer"
+                  onClick={() => signOutHandel()}
+                >
+                  Log out
+                </span>
+                <span className=" cursor-pointer">
+                  <Link to={`/dashboard?tab=profile`}>Profile</Link>
+                </span>
+              </div>
             </div>
           </div>
-        </div>):(
+        ) : (
           <Link to={"sign-in"}>
-          <Button gradientDuoTone={"purpleToBlue"} outline>Sign in</Button>
-        </Link>
-        ) }
-        
+            <Button gradientDuoTone={"purpleToBlue"} outline>
+              Sign in
+            </Button>
+          </Link>
+        )}
+
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
@@ -100,5 +141,3 @@ function Header() {
 }
 
 export default Header;
-
-

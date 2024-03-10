@@ -15,6 +15,7 @@ import EditPost from "./components/EditPost";
 import Users from "./components/Users";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
+import Search from "./pages/Search";
 function App() {
   return (
     <BrowserRouter>
@@ -37,6 +38,7 @@ function App() {
           <Route path="/users" element={<Users />} />
         </Route>
         <Route path="/post/:slug" element={<PostPage />} />
+        <Route path="/search" element={<Search/>} />
       </Routes>
       <FooterComp />
     </BrowserRouter>
