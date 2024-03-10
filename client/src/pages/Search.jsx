@@ -10,7 +10,6 @@ function Search() {
   });
 
   const [posts, setPosts] = useState([]);
-  console.log(posts);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [showMore, SetShowmore] = useState(false);
@@ -28,7 +27,6 @@ function Search() {
       const searchQuery = urlparams.toString();
       const res = await fetch(`/api/post/getposts?${searchQuery}`);
       const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         setError(data.message);
         setLoading(false);

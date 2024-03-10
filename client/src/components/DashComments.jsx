@@ -15,7 +15,6 @@ function DashComments() {
     try {
       const res = await fetch(`/api/comment/getallcomments`);
       const data = await res.json();
-      console.log(data)
       if (res.ok) {
         setallComments(data.comments);
         if (data.comments.length < 9) {

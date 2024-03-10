@@ -101,7 +101,6 @@ function EditPost() {
     const fetchPosts = async () => {
       const res = await fetch(`/api/post/getposts/?postId=${postId}`);
       const data = await res.json();
-      console.log(data.posts[0], "data");
       if (!res.ok) {
         console.log(data.message);
         setError(data.message);
