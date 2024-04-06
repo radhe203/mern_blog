@@ -5,9 +5,8 @@ import {
   HiArrowSmRight,
   HiDocumentText,
   HiOutlineUserGroup,
-  HiAnnotation,
-  HiChartPie,
 } from "react-icons/hi";
+import { FaPlus,FaCommentAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { signOutsucsess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -81,7 +80,7 @@ function DashSidebar() {
             <Link to="/dashboard?tab=comments">
               <Sidebar.Item
                 active={tab === "comments"}
-                icon={HiDocumentText}
+                icon={FaCommentAlt}
                 labelColor="dark"
                 as="div"
               >
@@ -99,6 +98,19 @@ function DashSidebar() {
                 as="div"
               >
                 Overview
+              </Sidebar.Item>
+            </Link>
+          )}
+
+          {currentUser.isAdmin && (
+            <Link to="/create-post">
+              <Sidebar.Item
+                active={tab === "overview"}
+                icon={FaPlus}
+                labelColor="dark"
+                as="div"
+              >
+                Add Post
               </Sidebar.Item>
             </Link>
           )}
